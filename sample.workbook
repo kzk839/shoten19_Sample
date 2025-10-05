@@ -1,0 +1,177 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "# 技術書典 19 : Azure Workbook からリソースを操作する\r\n\r\n## できること\r\n\r\n- 一覧から VM を選択後、ブック上のボタンを押すことで停止、起動する\r\n- 一覧から Application Gateway を選択後、ブック上のボタンを押すことで停止、起動する\r\n"
+      },
+      "name": "テキスト - 0"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type =~ \"Microsoft.Compute/virtualmachines\"\r\n| extend powerState = properties.extended.instanceView.powerState.displayStatus\r\n| project id, name, resourceGroup, location, subscriptionId, powerState",
+        "size": 0,
+        "showAnalytics": true,
+        "exportedParameters": [
+          {
+            "fieldName": "id",
+            "parameterName": "vmId",
+            "parameterType": 1
+          },
+          {
+            "fieldName": "name",
+            "parameterName": "vmName",
+            "parameterType": 1
+          },
+          {
+            "fieldName": "resourceGroup",
+            "parameterName": "vmRG",
+            "parameterType": 1
+          },
+          {
+            "fieldName": "subscriptionId",
+            "parameterName": "vmSubId",
+            "parameterType": 1
+          }
+        ],
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "value::all"
+        ]
+      },
+      "name": "クエリ - 1"
+    },
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "toolbar",
+        "links": [
+          {
+            "id": "fadb8dd2-e38c-4c4e-bd01-3d3d117fe60f",
+            "linkTarget": "ArmAction",
+            "linkLabel": "{vmName} を起動",
+            "postText": "選択した VM を起動",
+            "style": "link",
+            "icon": "Start",
+            "linkIsContextBlade": true,
+            "armActionContext": {
+              "path": "{vmId}/start?api-version=2024-11-01",
+              "headers": [],
+              "params": [],
+              "httpMethod": "POST",
+              "title": "VM の起動",
+              "description": "# 次の VM を起動します\r\n\r\nVM : {vmName}\r\n\r\nリソース グループ : {vmRG}\r\n\r\nサブスクリプション : {vmSubId}\r\n"
+            }
+          },
+          {
+            "id": "fd33c3ba-f09e-47d6-88c6-7fa3d77386dd",
+            "linkTarget": "ArmAction",
+            "linkLabel": "{vmName} を停止",
+            "postText": "選択した VM を停止",
+            "style": "link",
+            "icon": "Stop",
+            "linkIsContextBlade": true,
+            "armActionContext": {
+              "path": "{vmId}/deallocate?api-version=2024-11-01",
+              "headers": [],
+              "params": [],
+              "httpMethod": "POST",
+              "title": "VM の停止",
+              "description": "# 次の VM を停止 (割り当て解除) します\n\nVM : {vmName}\n\nリソース グループ : {vmRG}\n\nサブスクリプション : {vmSubId}\n"
+            }
+          }
+        ]
+      },
+      "name": "リンク - 2"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type =~ \"Microsoft.Network/applicationgateways\"\r\n| extend powerState = properties.operationalState\r\n| project id, name, resourceGroup, location, subscriptionId, powerState",
+        "size": 3,
+        "exportedParameters": [
+          {
+            "fieldName": "name",
+            "parameterName": "gwName",
+            "parameterType": 1
+          },
+          {
+            "fieldName": "resourceGroup",
+            "parameterName": "gwRG",
+            "parameterType": 1
+          },
+          {
+            "fieldName": "subscriptionId",
+            "parameterName": "gwSubId",
+            "parameterType": 1
+          },
+          {
+            "fieldName": "id",
+            "parameterName": "gwId",
+            "parameterType": 1
+          }
+        ],
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "/subscriptions/585dfa27-8911-478d-917e-13c9bcb58c2e"
+        ]
+      },
+      "name": "クエリ - 3"
+    },
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "toolbar",
+        "links": [
+          {
+            "id": "246d9fb6-495e-4038-b8e6-5ac4c4df59d3",
+            "linkTarget": "ArmAction",
+            "linkLabel": "{gwName} を起動",
+            "postText": "選択した AppGW を起動",
+            "style": "link",
+            "icon": "Start",
+            "linkIsContextBlade": true,
+            "armActionContext": {
+              "path": "{gwId}/start?api-version=2024-07-01",
+              "headers": [],
+              "params": [],
+              "httpMethod": "POST",
+              "title": "AppGW の起動",
+              "description": "# 次の AppGW を起動します\r\n\r\nAppGW : {gwName}\r\n\r\nリソース グループ : {gwRG}\r\n\r\nサブスクリプション : {gwSubId}"
+            }
+          },
+          {
+            "id": "00c8581b-2cea-4224-98c9-9929a98ebf09",
+            "linkTarget": "ArmAction",
+            "linkLabel": "{gwName} を停止",
+            "postText": "選択した AppGW を停止",
+            "style": "link",
+            "icon": "Stop",
+            "linkIsContextBlade": true,
+            "armActionContext": {
+              "path": "{gwId}/stop?api-version=2024-07-01",
+              "headers": [],
+              "params": [],
+              "httpMethod": "POST",
+              "title": "VM の停止",
+              "description": "# 次の AppGW を停止します\n\nAppGW : {gwName}\n\nリソース グループ : {gwRG}\n\nサブスクリプション : {gwSubId}"
+            }
+          }
+        ]
+      },
+      "name": "リンク - 2 - コピー"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
